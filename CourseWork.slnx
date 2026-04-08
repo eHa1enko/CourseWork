@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="CourseWork.API/CourseWork.API.csproj" />
+  <Project Path="CourseWork.Application/CourseWork.Application.csproj" />
+  <Project Path="CourseWork.DataAccess/CourseWork.DataAccess.csproj" />
+  <Project Path="CourseWork.Entities/CourseWork.Entities.csproj" />
+</Solution>
