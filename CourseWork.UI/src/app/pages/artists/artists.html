@@ -1,0 +1,23 @@
+<div class="page">
+  <h1>Artists</h1>
+
+  @if (loading()) {
+    <p class="state-msg">Loading...</p>
+  } @else if (artists().length === 0) {
+    <p class="state-msg">No artists found.</p>
+  } @else {
+    <div class="artist-grid">
+      @for (artist of artists(); track artist.id) {
+        <div class="artist-card" (click)="openArtist(artist.id)">
+          <div class="artist-photo">
+            <img [src]="apiBase + artist.imageUrl" [alt]="artist.name" />
+          </div>
+          <div class="artist-info">
+            <span class="artist-name">{{ artist.name }}</span>
+            <span class="artist-songs">{{ artist.songCount }} {{ artist.songCount === 1 ? 'song' : 'songs' }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
