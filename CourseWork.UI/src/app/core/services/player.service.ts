@@ -17,6 +17,7 @@ export class PlayerService {
   private readonly _currentTime$ = new BehaviorSubject<number>(0);
   private readonly _progress$ = new BehaviorSubject<number>(0);
   private readonly _shuffle$ = new BehaviorSubject<boolean>(false);
+  private readonly _volume$ = new BehaviorSubject<number>(1);
 
   readonly currentSong$ = this._currentSong$.asObservable();
 
@@ -27,6 +28,7 @@ export class PlayerService {
   readonly currentTime$ = this._currentTime$.asObservable();
   readonly progress$ = this._progress$.asObservable();
   readonly shuffle$ = this._shuffle$.asObservable();
+  readonly volume$ = this._volume$.asObservable();
 
   constructor() {
     this.audio.addEventListener('timeupdate', () => {
@@ -109,6 +111,16 @@ export class PlayerService {
     if (this.audio.duration) {
       this.audio.currentTime = fraction * this.audio.duration;
     }
+  }
+
+  get volume(): number {
+    return this._volume$.value;
+  }
+
+  setVolume(volume: number) {
+    const clamped = Math.min(1, Math.max(0, volume));
+    this.audio.volume = clamped;
+    this._volume$.next(clamped);
   }
 
   private get activeQueue(): SongDto[] {

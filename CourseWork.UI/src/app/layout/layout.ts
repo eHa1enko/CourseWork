@@ -20,6 +20,7 @@ export class Layout {
   readonly apiBase = environment.apiUrl.replace('/api', '');
 
   hoverFraction: number | null = null;
+  private lastVolume = 1;
 
   toggleLike(song: SongDto) {
     const wasLiked = song.isLiked;
@@ -40,6 +41,21 @@ export class Layout {
   onBarHover(event: MouseEvent) {
     const bar = event.currentTarget as HTMLElement;
     this.hoverFraction = Math.min(1, Math.max(0, event.offsetX / bar.offsetWidth));
+  }
+
+  onVolumeChange(event: Event) {
+    const value = parseFloat((event.target as HTMLInputElement).value);
+    this.lastVolume = value || this.lastVolume;
+    this.player.setVolume(value);
+  }
+
+  toggleMute() {
+    if (this.player.volume > 0) {
+      this.lastVolume = this.player.volume;
+      this.player.setVolume(0);
+    } else {
+      this.player.setVolume(this.lastVolume);
+    }
   }
 
   formatTime(seconds: number): string {
