@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ArtistsService } from '../../core/services/artists.service';
+import { SongsService } from '../../core/services/songs.service';
 import { PlayerService } from '../../core/services/player.service';
 import { ArtistDto } from '../../core/models/artist.dto';
 import { SongDto } from '../../core/models/song.dto';
@@ -16,6 +17,7 @@ import { environment } from '../../../environments/environment';
 export class ArtistDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly artistsService = inject(ArtistsService);
+  private readonly songsService = inject(SongsService);
   readonly player = inject(PlayerService);
   readonly location = inject(Location);
   readonly apiBase = environment.apiUrl.replace('/api', '');
@@ -42,6 +44,27 @@ export class ArtistDetail implements OnInit {
 
   isCurrentSong(song: SongDto): boolean {
     return this.player.currentSong?.id === song.id;
+  }
+
+  toggleLike(song: SongDto, event: Event) {
+    event.stopPropagation();
+    const wasLiked = song.isLiked;
+    this.songs.update(list =>
+      list.map(s => s.id === song.id ? { ...s, isLiked: !wasLiked } : s)
+    );
+    const request = wasLiked
+      ? this.songsService.unlikeSong(song.id)
+      : this.songsService.likeSong(song.id);
+    request.subscribe({
+      error: () => {
+        this.songs.update(list =>
+          list.map(s => s.id === song.id ? { ...s, isLiked: wasLiked } : s)
+        );
+      }
+    });
+    if (this.player.currentSong?.id === song.id) {
+      this.player.updateCurrentSongLike(!wasLiked);
+    }
   }
 
   formatDuration(seconds: number): string {

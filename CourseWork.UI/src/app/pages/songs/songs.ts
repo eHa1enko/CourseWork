@@ -36,6 +36,24 @@ export class Songs implements OnInit {
     return this.player.currentSong?.id === song.id;
   }
 
+  toggleLike(song: SongDto, event: Event) {
+    event.stopPropagation();
+    const wasLiked = song.isLiked;
+    this.songs.update(list =>
+      list.map(s => s.id === song.id ? { ...s, isLiked: !wasLiked } : s)
+    );
+    const request = wasLiked
+      ? this.songsService.unlikeSong(song.id)
+      : this.songsService.likeSong(song.id);
+    request.subscribe({
+      error: () => {
+        this.songs.update(list =>
+          list.map(s => s.id === song.id ? { ...s, isLiked: wasLiked } : s)
+        );
+      }
+    });
+  }
+
   formatDuration(seconds: number): string {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;

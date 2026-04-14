@@ -3,6 +3,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { AuthService } from '../core/services/auth.service';
 import { PlayerService } from '../core/services/player.service';
+import { SongsService } from '../core/services/songs.service';
+import { SongDto } from '../core/models/song.dto';
 import { environment } from '../../environments/environment';
 
 @Component({
@@ -14,9 +16,21 @@ import { environment } from '../../environments/environment';
 export class Layout {
   readonly auth = inject(AuthService);
   readonly player = inject(PlayerService);
+  private readonly songsService = inject(SongsService);
   readonly apiBase = environment.apiUrl.replace('/api', '');
 
   hoverFraction: number | null = null;
+
+  toggleLike(song: SongDto) {
+    const wasLiked = song.isLiked;
+    this.player.updateCurrentSongLike(!wasLiked);
+    const request = wasLiked
+      ? this.songsService.unlikeSong(song.id)
+      : this.songsService.likeSong(song.id);
+    request.subscribe({
+      error: () => this.player.updateCurrentSongLike(wasLiked)
+    });
+  }
 
   onSeek(event: MouseEvent) {
     const bar = event.currentTarget as HTMLElement;

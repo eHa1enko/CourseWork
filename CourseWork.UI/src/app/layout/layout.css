@@ -106,6 +106,13 @@
   min-width: 0;
 }
 
+.track-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
 .track-name {
   font-size: 13px;
   font-weight: 600;
@@ -118,6 +125,29 @@
 .no-song {
   color: var(--text-muted);
   font-weight: 400;
+}
+
+.like-btn-player {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 3px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: color var(--transition), transform var(--transition);
+}
+
+.like-btn-player:hover {
+  color: var(--accent);
+  transform: scale(1.15);
+}
+
+.like-btn-player.liked {
+  color: var(--accent);
 }
 
 .track-artist {

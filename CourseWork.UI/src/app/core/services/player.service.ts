@@ -100,6 +100,11 @@ export class PlayerService {
     }
   }
 
+  updateCurrentSongLike(isLiked: boolean) {
+    const current = this._currentSong$.value;
+    if (current) this._currentSong$.next({ ...current, isLiked });
+  }
+
   seek(fraction: number) {
     if (this.audio.duration) {
       this.audio.currentTime = fraction * this.audio.duration;
