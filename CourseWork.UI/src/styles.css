@@ -4,9 +4,51 @@
   padding: 0;
 }
 
+:root {
+  --bg-base:        #1c1c22;
+  --bg-surface:     #25252e;
+  --bg-elevated:    #2e2e3a;
+  --bg-card:        #333340;
+  --bg-hover:       rgba(167, 139, 250, 0.09);
+  --bg-active:      rgba(167, 139, 250, 0.16);
+
+  --accent:         #a78bfa;
+  --accent-bright:  #c4b0fc;
+  --accent-dim:     rgba(167, 139, 250, 0.5);
+
+  --text-primary:   #f2f1f7;
+  --text-secondary: #a09cb8;
+  --text-muted:     #6b677e;
+
+  --border:         rgba(255, 255, 255, 0.09);
+  --border-strong:  rgba(255, 255, 255, 0.15);
+
+  --radius-sm:      6px;
+  --radius-md:      10px;
+  --radius-lg:      14px;
+
+  --transition:     0.18s ease;
+}
+
 body {
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: 'Inter', -apple-system, 'Segoe UI', Arial, sans-serif;
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary);
+  background: var(--bg-base);
   overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-elevated);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }

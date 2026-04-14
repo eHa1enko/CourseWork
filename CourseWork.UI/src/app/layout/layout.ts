@@ -16,9 +16,16 @@ export class Layout {
   readonly player = inject(PlayerService);
   readonly apiBase = environment.apiUrl.replace('/api', '');
 
+  hoverFraction: number | null = null;
+
   onSeek(event: MouseEvent) {
     const bar = event.currentTarget as HTMLElement;
     this.player.seek(event.offsetX / bar.offsetWidth);
+  }
+
+  onBarHover(event: MouseEvent) {
+    const bar = event.currentTarget as HTMLElement;
+    this.hoverFraction = Math.min(1, Math.max(0, event.offsetX / bar.offsetWidth));
   }
 
   formatTime(seconds: number): string {

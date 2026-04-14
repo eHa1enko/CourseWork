@@ -40,8 +40,15 @@
           <span class="track-artist">{{ song.artistName }}</span>
           <div class="progress-bar">
             <span class="time">{{ formatTime((player.currentTime$ | async) ?? 0) }}</span>
-            <div class="bar" (click)="onSeek($event)">
+            <div class="bar"
+                 (click)="onSeek($event)"
+                 (mousemove)="onBarHover($event)"
+                 (mouseleave)="hoverFraction = null">
               <div class="bar-fill" [style.width.%]="((player.progress$ | async) ?? 0) * 100"></div>
+              @if (hoverFraction !== null) {
+                <div class="bar-hover" [style.width.%]="hoverFraction * 100"></div>
+                <div class="bar-thumb" [style.left.%]="hoverFraction * 100"></div>
+              }
             </div>
             <span class="time">{{ formatTime(song.duration) }}</span>
           </div>
