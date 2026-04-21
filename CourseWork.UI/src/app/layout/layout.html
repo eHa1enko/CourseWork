@@ -102,6 +102,70 @@
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
+      <div class="search-wrap">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input
+          class="search-input"
+          type="search"
+          placeholder="Search..."
+          [value]="searchQuery()"
+          (input)="onSearchInput($event)"
+          (keydown)="onSearchKeydown($event)"
+          (focus)="onSearchFocus()"
+          (blur)="onSearchBlur()"
+          autocomplete="off"
+        />
+
+        @if (showDropdown()) {
+          <div class="search-dropdown">
+            @if (searchLoading()) {
+              <div class="dropdown-loading">Searching...</div>
+            } @else if (dropdownArtists().length === 0 && dropdownSongs().length === 0) {
+              <div class="dropdown-empty">Nothing found</div>
+            } @else {
+
+              @if (dropdownArtists().length > 0) {
+                <div class="dropdown-section-label">Artists</div>
+                @for (artist of dropdownArtists(); track artist.id) {
+                  <div class="dropdown-item" (mousedown)="openArtistFromDropdown(artist)">
+                    <div class="dropdown-thumb artist-thumb">
+                      <img [src]="apiBase + artist.imageUrl" [alt]="artist.name" />
+                    </div>
+                    <div class="dropdown-meta">
+                      <span class="dropdown-title">{{ artist.name }}</span>
+                      <span class="dropdown-sub">Artist · {{ artist.songCount }} songs</span>
+                    </div>
+                  </div>
+                }
+              }
+
+              @if (dropdownSongs().length > 0) {
+                <div class="dropdown-section-label">Songs</div>
+                @for (song of dropdownSongs(); track song.id) {
+                  <div class="dropdown-item" (mousedown)="playSongFromDropdown(song)">
+                    <div class="dropdown-thumb">
+                      <img [src]="apiBase + song.coverUrl" [alt]="song.title" />
+                    </div>
+                    <div class="dropdown-meta">
+                      <span class="dropdown-title">{{ song.title }}</span>
+                      <span class="dropdown-sub">Song · {{ song.artistName }}</span>
+                    </div>
+                  </div>
+                }
+              }
+
+              <div class="dropdown-all" (mousedown)="goToSearchPage()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                Search for "{{ searchQuery() }}"
+              </div>
+            }
+          </div>
+        }
+      </div>
       <nav class="sidebar-nav">
         <p class="nav-label">Library</p>
         <a routerLink="/songs" routerLinkActive="active">
@@ -122,6 +186,15 @@
           </svg>
           Liked Songs
         </a>
+        @if (auth.currentUser?.isAdmin) {
+          <p class="nav-label" style="margin-top: 16px;">Admin</p>
+          <a routerLink="/admin" routerLinkActive="active">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4l5 2.18V11c0 3.5-2.33 6.79-5 7.93-2.67-1.14-5-4.43-5-7.93V7.18L12 5z"/>
+            </svg>
+            Admin Panel
+          </a>
+        }
       </nav>
     </aside>
 
@@ -137,7 +210,7 @@
     <span>2026. Eduard Halenko, K22 KI</span>
     @if (auth.currentUser) {
       <span class="user-info">{{ auth.currentUser.username }}</span>
-      <button class="logout-btn" (click)="auth.logout()">Log out</button>
+      <button class="logout-btn" (click)="logout()">Log out</button>
     }
   </footer>
 

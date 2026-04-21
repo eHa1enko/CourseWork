@@ -1,44 +1,49 @@
 import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
-import { ArtistsService } from '../../core/services/artists.service';
-import { SongsService } from '../../core/services/songs.service';
+import { SearchService, SearchResultDto } from '../../core/services/search.service';
 import { PlayerService } from '../../core/services/player.service';
-import { ArtistDto } from '../../core/models/artist.dto';
+import { SongsService } from '../../core/services/songs.service';
 import { SongDto } from '../../core/models/song.dto';
+import { ArtistDto } from '../../core/models/artist.dto';
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-artist-detail',
+  selector: 'app-search',
   imports: [],
-  templateUrl: './artist-detail.html',
-  styleUrl: './artist-detail.css'
+  templateUrl: './search.html',
+  styleUrl: './search.css'
 })
-export class ArtistDetail implements OnInit, OnDestroy {
+export class Search implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
-  private readonly artistsService = inject(ArtistsService);
+  private readonly router = inject(Router);
+  private readonly searchService = inject(SearchService);
   private readonly songsService = inject(SongsService);
   readonly player = inject(PlayerService);
-  readonly location = inject(Location);
   readonly apiBase = environment.apiUrl.replace('/api', '');
 
-  artist = signal<ArtistDto | null>(null);
+  query = signal('');
+  artists = signal<ArtistDto[]>([]);
   songs = signal<SongDto[]>([]);
-  loading = signal(true);
+  loading = signal(false);
+  searched = signal(false);
 
+  private routeSub?: Subscription;
   private likeSub?: Subscription;
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.artistsService.getById(id).subscribe(a => { this.artist.set(a); });
-    this.artistsService.getSongs(id).subscribe({
-      next: songs => {
-        this.songs.set(songs);
-        this.loading.set(false);
-      },
-      error: () => { this.loading.set(false); }
+    this.routeSub = this.route.queryParamMap.subscribe(params => {
+      const q = params.get('q') ?? '';
+      this.query.set(q);
+      if (q.trim()) {
+        this.doSearch(q);
+      } else {
+        this.artists.set([]);
+        this.songs.set([]);
+        this.searched.set(false);
+      }
     });
+
     this.likeSub = this.songsService.likeChanged$.subscribe(({ songId, isLiked }) => {
       this.songs.update(list =>
         list.map(s => s.id === songId ? { ...s, isLiked } : s)
@@ -47,7 +52,26 @@ export class ArtistDetail implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.routeSub?.unsubscribe();
     this.likeSub?.unsubscribe();
+  }
+
+  private doSearch(q: string) {
+    this.loading.set(true);
+    this.searched.set(false);
+    this.searchService.search(q).subscribe({
+      next: result => {
+        this.artists.set(result.artists);
+        this.songs.set(result.songs);
+        this.loading.set(false);
+        this.searched.set(true);
+      },
+      error: () => { this.loading.set(false); this.searched.set(true); }
+    });
+  }
+
+  openArtist(id: number) {
+    this.router.navigate(['/artists', id]);
   }
 
   playSong(song: SongDto) {

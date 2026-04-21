@@ -117,6 +117,18 @@ export class PlayerService {
     return this._volume$.value;
   }
 
+  stop() {
+    this.audio.pause();
+    this.audio.src = '';
+    this._currentSong$.next(null);
+    this._isPlaying$.next(false);
+    this._progress$.next(0);
+    this._currentTime$.next(0);
+    this.queue = [];
+    this.shuffledQueue = [];
+    this.queueIndex = -1;
+  }
+
   setVolume(volume: number) {
     const clamped = Math.min(1, Math.max(0, volume));
     this.audio.volume = clamped;

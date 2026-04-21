@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { SongsService } from '../../core/services/songs.service';
 import { PlayerService } from '../../core/services/player.service';
 import { SongDto } from '../../core/models/song.dto';
@@ -10,13 +11,15 @@ import { environment } from '../../../environments/environment';
   templateUrl: './liked-songs.html',
   styleUrl: './liked-songs.css'
 })
-export class LikedSongs implements OnInit {
+export class LikedSongs implements OnInit, OnDestroy {
   private readonly songsService = inject(SongsService);
   readonly player = inject(PlayerService);
   readonly apiBase = environment.apiUrl.replace('/api', '');
 
   songs = signal<SongDto[]>([]);
   loading = signal(true);
+
+  private likeSub?: Subscription;
 
   ngOnInit() {
     this.songsService.getLikedSongs().subscribe({
@@ -26,6 +29,14 @@ export class LikedSongs implements OnInit {
       },
       error: () => { this.loading.set(false); }
     });
+    this.likeSub = this.songsService.likeChanged$.subscribe(({ songId, isLiked }) => {
+      if (isLiked) return;
+      this.songs.update(list => list.filter(s => s.id !== songId));
+    });
+  }
+
+  ngOnDestroy() {
+    this.likeSub?.unsubscribe();
   }
 
   playSong(song: SongDto) {
@@ -41,6 +52,10 @@ export class LikedSongs implements OnInit {
     this.songsService.unlikeSong(song.id).subscribe({
       next: () => {
         this.songs.update(list => list.filter(s => s.id !== song.id));
+        this.songsService.notifyLikeChanged(song.id, false);
+        if (this.player.currentSong?.id === song.id) {
+          this.player.updateCurrentSongLike(false);
+        }
       }
     });
   }

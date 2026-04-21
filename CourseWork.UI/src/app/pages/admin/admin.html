@@ -1,0 +1,131 @@
+<div class="admin">
+  <h1 class="admin-title">Admin Panel</h1>
+
+  <!-- ── ARTISTS ─────────────────────────────────────────── -->
+  <section class="admin-section">
+    <h2 class="section-title">Artists</h2>
+
+    <form class="admin-form" (ngSubmit)="submitArtist()">
+      <div class="form-row">
+        <input
+          class="admin-input"
+          type="text"
+          placeholder="Artist name"
+          [(ngModel)]="artistName"
+          name="artistName"
+          required
+        />
+        <label class="file-label">
+          <span>{{ artistImageFile ? artistImageFile.name : 'Photo (optional)' }}</span>
+          <input type="file" accept="image/*" (change)="onArtistImage($event)" hidden />
+        </label>
+        <button class="admin-btn primary" type="submit" [disabled]="artistLoading || !artistName.trim()">
+          {{ artistLoading ? 'Saving…' : 'Add Artist' }}
+        </button>
+      </div>
+      @if (artistError) {
+        <p class="form-error">{{ artistError }}</p>
+      }
+    </form>
+
+    <div class="admin-list">
+      @for (artist of artists(); track artist.id) {
+        <div class="admin-item">
+          @if (artist.imageUrl) {
+            <img class="item-thumb" [src]="apiBase + artist.imageUrl" [alt]="artist.name" />
+          } @else {
+            <div class="item-thumb-empty"></div>
+          }
+          <span class="item-name">{{ artist.name }}</span>
+          <span class="item-meta">{{ artist.songCount }} tracks</span>
+          <button class="icon-btn delete-btn" (click)="deleteArtist(artist)" title="Delete">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+            </svg>
+          </button>
+        </div>
+      } @empty {
+        <p class="empty-hint">No artists yet.</p>
+      }
+    </div>
+  </section>
+
+  <!-- ── SONGS ───────────────────────────────────────────── -->
+  <section class="admin-section">
+    <h2 class="section-title">Songs</h2>
+
+    <form class="admin-form" (ngSubmit)="submitSong()">
+      <div class="form-row">
+        <input
+          class="admin-input"
+          type="text"
+          placeholder="Song title"
+          [(ngModel)]="songTitle"
+          name="songTitle"
+          required
+        />
+        <select
+          class="admin-select"
+          [(ngModel)]="songArtistId"
+          name="songArtistId"
+          required
+        >
+          <option [ngValue]="null" disabled>Select artist</option>
+          @for (artist of artists(); track artist.id) {
+            <option [ngValue]="artist.id">{{ artist.name }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="file-label" [class.has-file]="!!songAudioFile">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+          </svg>
+          <span>{{ songAudioFile ? songAudioFile.name : 'Audio file (mp3)' }}</span>
+          <input type="file" accept="audio/*" (change)="onSongAudio($event)" hidden />
+        </label>
+        <label class="file-label" [class.has-file]="!!songCoverFile">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+          </svg>
+          <span>{{ songCoverFile ? songCoverFile.name : 'Cover image (optional)' }}</span>
+          <input type="file" accept="image/*" (change)="onSongCover($event)" hidden />
+        </label>
+        <button
+          class="admin-btn primary"
+          type="submit"
+          [disabled]="songLoading || !songTitle.trim() || !songArtistId || !songAudioFile"
+        >
+          {{ songLoading ? 'Uploading…' : 'Add Song' }}
+        </button>
+      </div>
+      @if (songError) {
+        <p class="form-error">{{ songError }}</p>
+      }
+    </form>
+
+    <div class="admin-list">
+      @for (song of songs(); track song.id) {
+        <div class="admin-item">
+          @if (song.coverUrl) {
+            <img class="item-thumb" [src]="apiBase + song.coverUrl" [alt]="song.title" />
+          } @else {
+            <div class="item-thumb-empty"></div>
+          }
+          <div class="item-info">
+            <span class="item-name">{{ song.title }}</span>
+            <span class="item-meta">{{ song.artistName }}</span>
+          </div>
+          <span class="item-duration">{{ formatTime(song.duration) }}</span>
+          <button class="icon-btn delete-btn" (click)="deleteSong(song)" title="Delete">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+            </svg>
+          </button>
+        </div>
+      } @empty {
+        <p class="empty-hint">No songs yet.</p>
+      }
+    </div>
+  </section>
+</div>

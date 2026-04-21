@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using CourseWork.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +13,14 @@ namespace CourseWork.API.Controllers
     {
         private readonly IArtistService _artistService;
         private readonly ISongService _songService;
+        private readonly ILikedSongService _likedSongService;
         private readonly IWebHostEnvironment _env;
 
-        public ArtistsController(IArtistService artistService, ISongService songService, IWebHostEnvironment env)
+        public ArtistsController(IArtistService artistService, ISongService songService, ILikedSongService likedSongService, IWebHostEnvironment env)
         {
             _artistService = artistService;
             _songService = songService;
+            _likedSongService = likedSongService;
             _env = env;
         }
 
@@ -39,7 +42,16 @@ namespace CourseWork.API.Controllers
         [HttpGet("{id}/songs")]
         public async Task<IActionResult> GetSongs(int id)
         {
-            var songs = await _songService.GetByArtistIdAsync(id);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? User.FindFirstValue("sub")!);
+            var songs = (await _songService.GetByArtistIdAsync(id)).ToList();
+            var likedIds = (await _likedSongService.GetLikedSongsAsync(userId))
+                .Select(s => s.Id)
+                .ToHashSet();
+
+            foreach (var song in songs)
+                song.IsLiked = likedIds.Contains(song.Id);
+
             return Ok(songs);
         }
 

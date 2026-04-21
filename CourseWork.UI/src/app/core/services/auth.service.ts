@@ -7,6 +7,7 @@ export interface UserDto {
   id: number;
   username: string;
   email: string;
+  isAdmin: boolean;
 }
 
 export interface AuthResultDto {

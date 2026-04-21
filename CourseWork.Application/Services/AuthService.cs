@@ -75,6 +75,7 @@ namespace CourseWork.Application.Services
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim("username", user.Username),
+                new Claim("isAdmin", user.IsAdmin.ToString().ToLower()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -93,7 +94,8 @@ namespace CourseWork.Application.Services
         {
             Id = user.Id,
             Username = user.Username,
-            Email = user.Email
+            Email = user.Email,
+            IsAdmin = user.IsAdmin
         };
     }
 }

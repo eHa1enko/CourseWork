@@ -1,0 +1,192 @@
+.page h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 24px;
+  letter-spacing: -0.3px;
+}
+
+.state-msg {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.section {
+  margin-bottom: 36px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0 0 14px;
+  letter-spacing: 0.2px;
+}
+
+/* Artists grid */
+.artist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+.artist-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+  border: 1px solid var(--border);
+}
+
+.artist-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+}
+
+.artist-photo {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--bg-elevated);
+}
+
+.artist-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.artist-card:hover .artist-photo img {
+  transform: scale(1.04);
+}
+
+.artist-info {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.artist-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.artist-songs {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Songs list */
+.song-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.song-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.song-row:hover {
+  background: var(--bg-hover);
+}
+
+.song-row.active {
+  background: var(--bg-active);
+}
+
+.song-row.active .song-title {
+  color: var(--accent);
+}
+
+.song-index {
+  width: 22px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.playing-icon {
+  color: var(--accent);
+}
+
+.song-cover {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.song-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.song-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-artist {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.song-duration {
+  font-size: 12px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.like-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 4px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: color var(--transition), transform var(--transition), opacity var(--transition);
+}
+
+.song-row:hover .like-btn,
+.like-btn.liked {
+  opacity: 1;
+}
+
+.like-btn:hover {
+  color: var(--accent);
+  transform: scale(1.15);
+}
+
+.like-btn.liked {
+  color: var(--accent);
+}
