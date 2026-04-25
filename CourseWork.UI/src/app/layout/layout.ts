@@ -31,6 +31,7 @@ export class Layout implements OnDestroy {
   dropdownSongs = signal<SongDto[]>([]);
   showDropdown = signal(false);
   searchLoading = signal(false);
+  showUserMenu = signal(false);
 
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
   private closeTimer: ReturnType<typeof setTimeout> | null = null;
@@ -139,6 +140,14 @@ export class Layout implements OnDestroy {
     const value = parseFloat((event.target as HTMLInputElement).value);
     this.lastVolume = value || this.lastVolume;
     this.player.setVolume(value);
+  }
+
+  toggleUserMenu() {
+    this.showUserMenu.update(v => !v);
+  }
+
+  closeUserMenu() {
+    this.showUserMenu.set(false);
   }
 
   logout() {

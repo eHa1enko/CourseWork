@@ -10,7 +10,7 @@
 /* ── HEADER / PLAYER ── */
 .header {
   height: 72px;
-  background: rgba(28, 28, 34, 0.92);
+  background: var(--header-bg);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--border);
@@ -87,7 +87,7 @@
   border-radius: var(--radius-sm);
   flex-shrink: 0;
   object-fit: cover;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px var(--shadow-md);
 }
 
 .track-thumb-empty {
@@ -341,7 +341,7 @@
   background: var(--bg-surface);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 16px 40px var(--shadow-lg);
   z-index: 100;
   overflow: hidden;
   animation: dropdown-in 0.12s ease;
@@ -496,6 +496,115 @@
   fill: var(--accent);
 }
 
+/* ── SIDEBAR USER ── */
+.sidebar-user {
+  margin-top: auto;
+  padding: 12px 10px 0;
+  position: relative;
+  border-top: 1px solid var(--border);
+}
+
+.user-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: background var(--transition), color var(--transition);
+}
+
+.user-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.user-btn-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.user-btn-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-btn-chevron {
+  flex-shrink: 0;
+  transition: transform var(--transition);
+}
+
+.user-btn-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.user-menu-popup {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 10px;
+  right: 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: 0 -8px 32px var(--shadow-md);
+  overflow: hidden;
+  animation: dropdown-in 0.12s ease;
+  z-index: 50;
+}
+
+.user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  box-sizing: border-box;
+}
+
+.user-menu-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.user-menu-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+.user-menu-logout {
+  color: #e05555;
+}
+
+.user-menu-logout:hover {
+  background: rgba(224, 85, 85, 0.1);
+  color: #e05555;
+}
+
 /* ── CONTENT ── */
 .content {
   flex: 1;
@@ -507,7 +616,7 @@
 /* ── FOOTER ── */
 .footer {
   height: 34px;
-  background: rgba(28, 28, 34, 0.95);
+  background: var(--footer-bg);
   border-top: 1px solid var(--border);
   color: var(--text-muted);
   display: flex;

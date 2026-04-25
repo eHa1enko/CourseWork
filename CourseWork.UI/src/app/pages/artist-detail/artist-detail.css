@@ -29,7 +29,7 @@
   border-radius: var(--radius-md);
   object-fit: cover;
   flex-shrink: 0;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 28px var(--shadow-md);
 }
 
 .artist-meta h1 {
@@ -136,7 +136,7 @@
   border-radius: var(--radius-sm);
   object-fit: cover;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 8px var(--shadow-sm);
 }
 
 .song-title {

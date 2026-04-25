@@ -28,7 +28,7 @@
 
 .artist-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 32px var(--shadow-md);
   background: var(--bg-elevated);
   border-color: var(--border-strong);
 }

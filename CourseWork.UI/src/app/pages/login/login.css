@@ -15,7 +15,7 @@
   padding: 44px 40px;
   width: 100%;
   max-width: 380px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 24px 60px var(--shadow-md);
 }
 
 .auth-title {
