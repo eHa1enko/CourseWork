@@ -66,12 +66,11 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Seed database
+// Apply pending migrations on startup
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
-    DbSeeder.Seed(context, env.WebRootPath);
+    context.Database.Migrate();
 }
 
 if (app.Environment.IsDevelopment())
