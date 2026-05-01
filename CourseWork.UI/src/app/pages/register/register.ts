@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
@@ -13,6 +13,7 @@ export class Register {
   private readonly auth = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   form = this.fb.group({
     username: ['', [Validators.required, Validators.minLength(3)]],
@@ -24,7 +25,10 @@ export class Register {
   loading = false;
 
   submit() {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     this.loading = true;
     this.error = '';
 
@@ -34,6 +38,7 @@ export class Register {
       error: (err) => {
         this.error = err.error?.message ?? 'Registration failed';
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }
