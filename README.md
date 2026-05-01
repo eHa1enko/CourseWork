@@ -12,10 +12,10 @@ MusicPlatform
     - встановити sql server express  
 
     1.1. Посилання для встановлення ПЗ.
-        .net10 "https://dotnet.microsoft.com/en-us/download/dotnet/10.0".
-        node.js "https://nodejs.org/en/download", 
-        angular cli "npm install -g @angular/cli" в терміналі. (після встановлення node.js)
-        sql server "https://www.microsoft.com/en-us/sql-server/sql-server-downloads"
+        - .net10 "https://dotnet.microsoft.com/en-us/download/dotnet/10.0".
+        - node.js "https://nodejs.org/en/download", 
+        - angular cli "npm install -g @angular/cli" в терміналі. (після встановлення node.js)
+        - sql server "https://www.microsoft.com/en-us/sql-server/sql-server-downloads"
 
 2. Налаштування бд. 
     - створити БД, замінити ConnectionString в appsettings.Development.json на свій ConnectionString 
