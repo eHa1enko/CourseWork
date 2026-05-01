@@ -22,7 +22,8 @@ namespace CourseWork.Application.Services
                 Id = ls.Song.Id,
                 Title = ls.Song.Title,
                 Duration = ls.Song.Duration,
-                CoverUrl = ls.Song.CoverPath is not null ? $"/api/songs/{ls.Song.Id}/cover" : null,
+                FileUrl = ls.Song.FilePath,
+                CoverUrl = ls.Song.CoverPath,
                 ArtistId = ls.Song.ArtistId,
                 ArtistName = ls.Song.Artist?.Name ?? string.Empty,
                 IsLiked = true

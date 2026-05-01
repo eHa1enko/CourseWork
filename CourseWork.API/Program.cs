@@ -68,7 +68,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 app.UseCors("Angular");
 app.UseAuthentication();
 app.UseAuthorization();
