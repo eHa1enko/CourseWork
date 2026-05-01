@@ -12,25 +12,25 @@ MusicPlatform
     - встановити sql server express  
 
     1.1. Посилання для встановлення ПЗ.
-        - .net10 "https://dotnet.microsoft.com/en-us/download/dotnet/10.0".
-        - node.js "https://nodejs.org/en/download", 
-        - angular cli "npm install -g @angular/cli" в терміналі. (після встановлення node.js)
-        - sql server "https://www.microsoft.com/en-us/sql-server/sql-server-downloads"
+      - .net10 "https://dotnet.microsoft.com/en-us/download/dotnet/10.0".
+      - node.js "https://nodejs.org/en/download"
+      - angular cli "npm install -g @angular/cli" в терміналі. (після встановлення node.js)
+      - sql server "https://www.microsoft.com/en-us/sql-server/sql-server-downloads"
 
-2. Налаштування бд. 
+3. Налаштування бд. 
     - створити БД, замінити ConnectionString в appsettings.Development.json на свій ConnectionString 
 
-3. Запуск бекенду
+4. Запуск бекенду
     - проєкт треба запускати з CourseWork.API "cd CourseWork.API"
     - dotnet ef database update, перед першим запуском, це також треба робити з CourseWork.API 
     - dotnet run для запуску, також з CourseWork.API.
 
-4. Запуск фронтенду
+5. Запуск фронтенду
     - проєкт треба запускати з CourseWork.UI "cd CourseWork.UI"
     - "npm install" перед першим запускож, це також треба робити з CourseWork.UI
     - "ng serve" для запуску проєкту, також CourseWork.UI
 
-5. Авторизація. 
+6. Авторизація. 
     В проєкті є адмін панель для додавання артистів та пісень, для того щоб вона з'явилась треба внести зміни в БД
 
     Приклад в SSMS 22
