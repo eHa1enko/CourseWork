@@ -4,7 +4,7 @@ MusicPlatform
 
 Інструкції по запуску проєкту. 
 
-Також додана папка templates в якій вже є декілька пісень без авторських прав, лого артистів та обложки для пісень, можете використовувати їх для тестування 
+Також додана папка templates в якій вже є декілька пісень без авторських прав, лого артистів та обложки для пісень, можете використовувати їх для тестування або можете завантажувати свої.
 
 1. Встановлення ПЗ.
     - встановити .net 10 з оффіційного сайту microsoft, "dotnet --version" в терміналі для перевірки. 
@@ -22,13 +22,13 @@ MusicPlatform
 
 3. Запуск бекенду
     - проєкт треба запускати з CourseWork.API "cd CourseWork.API"
-    - dotnet ef database update, перед першим запуском, також робити це з CourseWork.API 
-    - dotnet run для запуску
+    - dotnet ef database update, перед першим запуском, це також треба робити з CourseWork.API 
+    - dotnet run для запуску, також з CourseWork.API.
 
 4. Запуск фронтенду
     - проєкт треба запускати з CourseWork.UI "cd CourseWork.UI"
-    - "npm install" перед першим запуском
-    - "ng serve" для запуску проєкту
+    - "npm install" перед першим запускож, це також треба робити з CourseWork.UI
+    - "ng serve" для запуску проєкту, також CourseWork.UI
 
 5. Авторизація. 
     В проєкті є адмін панель для додавання артистів та пісень, для того щоб вона з'явилась треба внести зміни в БД
@@ -37,7 +37,8 @@ MusicPlatform
     - зареєструватись в системі. 
     - знайдіть таблицю з юзерами 
     - ![шлях](image.png)
-    - поле isAdmin(по стандарту 0) замінать на 1 ![приклад](image-1.png) 
+    - поле isAdmin(по стандарту 0) замініть на 1
+    -  ![приклад](image-1.png) 
 
  -------------------------------
 Для запуску на macOs/linux
@@ -46,7 +47,7 @@ MusicPlatform
 
 1. Встановити Docker Desktop "https://www.docker.com/products/docker-desktop"
 
-2. Запустити SQL Server контейнер (замінити YOUR_PASSWORD та YOUR_DB_NAME на свій пароль та назву дб "в проєкті використовується назва MusicPlatform" ):
+2. Запустити SQL Server контейнер (замінити YOUR_PASSWORD та YOUR_DB_NAME на свій пароль та назву дб" в проєкті використовується назва MusicPlatform" ):
     
     docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=YOUR_PASSWORD" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
 
@@ -54,3 +55,4 @@ MusicPlatform
     "Server=localhost,1433;Database=YOUR_DB_NAME;User Id=SA;Password=YOUR_PASSWORD;TrustServerCertificate=True;"
 
 4. Далі — кроки 3 і 4 з основної інструкції (dotnet ef database update, dotnet run, ng serve).
+ 
