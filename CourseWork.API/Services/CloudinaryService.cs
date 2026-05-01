@@ -17,6 +17,7 @@ namespace CourseWork.API.Services
             _cloudinary = new Cloudinary(account) { Api = { Secure = true } };
         }
 
+        // аудіо завантажується як video resource — так вимагає cloudinary api
         public async Task<string> UploadAudioAsync(Stream stream, string fileName)
         {
             var uploadParams = new VideoUploadParams
@@ -59,8 +60,7 @@ namespace CourseWork.API.Services
             });
         }
 
-        // Extracts public_id from a Cloudinary URL, e.g.:
-        // https://res.cloudinary.com/cloud/video/upload/v123/songs/file.mp3 → songs/file
+        // витягує public_id з url, пропускає версійний сегмент (v123...)
         private static string? ExtractPublicId(string url)
         {
             try

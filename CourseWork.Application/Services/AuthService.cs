@@ -22,6 +22,7 @@ namespace CourseWork.Application.Services
             _jwtSettings = jwtSettings.Value;
         }
 
+        // перевіряє унікальність email, хешує пароль, повертає токен
         public async Task<AuthResultDto> RegisterAsync(RegisterDto dto)
         {
             var existing = await _userRepository.GetByEmailAsync(dto.Email);
@@ -44,6 +45,7 @@ namespace CourseWork.Application.Services
             };
         }
 
+        // звіряє пароль з хешем, повертає свіжий токен
         public async Task<AuthResultDto> LoginAsync(LoginDto dto)
         {
             var user = await _userRepository.GetByEmailAsync(dto.Email)
@@ -65,6 +67,7 @@ namespace CourseWork.Application.Services
             return user is null ? null : ToDto(user);
         }
 
+        // формує JWT з клеймами користувача, включаючи isAdmin
         private string GenerateToken(User user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));

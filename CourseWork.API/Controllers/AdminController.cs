@@ -21,8 +21,7 @@ namespace CourseWork.API.Controllers
             _cloudinary = cloudinary;
         }
 
-        // ── ARTISTS ──────────────────────────────────────────────
-
+        // creates artist, uploads image to cloudinary if provided
         [HttpPost("artists")]
         public async Task<IActionResult> CreateArtist([FromForm] string name, IFormFile? image)
         {
@@ -40,6 +39,7 @@ namespace CourseWork.API.Controllers
             return Ok(artist);
         }
 
+        // deletes artist and removes their image from cloudinary
         [HttpDelete("artists/{id:int}")]
         public async Task<IActionResult> DeleteArtist(int id)
         {
@@ -56,8 +56,7 @@ namespace CourseWork.API.Controllers
             return deleted ? NoContent() : NotFound();
         }
 
-        // ── SONGS ─────────────────────────────────────────────────
-
+        // uploads audio + optional cover, reads duration via taglib
         [HttpPost("songs")]
         public async Task<IActionResult> CreateSong(
             [FromForm] string title,
@@ -89,6 +88,7 @@ namespace CourseWork.API.Controllers
             return Ok(song);
         }
 
+        // removes song from db and cleans up files on cloudinary
         [HttpDelete("songs/{id:int}")]
         public async Task<IActionResult> DeleteSong(int id)
         {
@@ -106,14 +106,14 @@ namespace CourseWork.API.Controllers
             return NoContent();
         }
 
-        // ── HELPERS ───────────────────────────────────────────────
-
+        // reads isAdmin claim from JWT
         private bool IsAdmin()
         {
             var claim = User.FindFirst("isAdmin");
             return claim?.Value == "true";
         }
 
+        // taglib потребує реального файлу, тому скидаємо стрім у temp і прибираємо після
         private static int GetDurationFromStream(Stream stream, string fileName)
         {
             var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}{Path.GetExtension(fileName)}");
