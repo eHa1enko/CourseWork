@@ -34,7 +34,7 @@
 
     <div class="now-playing">
       @if (player.currentSong$ | async; as song) {
-        <img class="track-thumb" [src]="apiBase + song.coverUrl" alt="cover" />
+        <img class="track-thumb" [src]="song.coverUrl" alt="cover" />
         <div class="track-info">
           <div class="track-title-row">
             <span class="track-name">{{ song.title }}</span>
@@ -131,7 +131,7 @@
                 @for (artist of dropdownArtists(); track artist.id) {
                   <div class="dropdown-item" (mousedown)="openArtistFromDropdown(artist)">
                     <div class="dropdown-thumb artist-thumb">
-                      <img [src]="apiBase + artist.imageUrl" [alt]="artist.name" />
+                      <img [src]="artist.imageUrl" [alt]="artist.name" />
                     </div>
                     <div class="dropdown-meta">
                       <span class="dropdown-title">{{ artist.name }}</span>
@@ -146,7 +146,7 @@
                 @for (song of dropdownSongs(); track song.id) {
                   <div class="dropdown-item" (mousedown)="playSongFromDropdown(song)">
                     <div class="dropdown-thumb">
-                      <img [src]="apiBase + song.coverUrl" [alt]="song.title" />
+                      <img [src]="song.coverUrl" [alt]="song.title" />
                     </div>
                     <div class="dropdown-meta">
                       <span class="dropdown-title">{{ song.title }}</span>

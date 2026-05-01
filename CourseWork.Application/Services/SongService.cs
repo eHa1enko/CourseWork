@@ -49,6 +49,7 @@ namespace CourseWork.Application.Services
             return song?.CoverPath;
         }
 
+        // після збереження робимо повторний запит щоб отримати пісню разом з артистом
         public async Task<SongDto> CreateAsync(string title, int artistId, string filePath, string? coverPath, int duration)
         {
             var song = new CourseWork.Entities.Entities.Song
@@ -77,7 +78,8 @@ namespace CourseWork.Application.Services
             Id = song.Id,
             Title = song.Title,
             Duration = song.Duration,
-            CoverUrl = song.CoverPath is not null ? $"/api/songs/{song.Id}/cover" : null,
+            FileUrl = song.FilePath,
+            CoverUrl = song.CoverPath,
             ArtistId = song.ArtistId,
             ArtistName = song.Artist?.Name ?? string.Empty
         };

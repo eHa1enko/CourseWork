@@ -8,7 +8,7 @@
 
   @if (artist(); as a) {
     <div class="artist-header">
-      <img class="artist-photo" [src]="apiBase + a.imageUrl" [alt]="a.name" />
+      <img class="artist-photo" [src]="a.imageUrl" [alt]="a.name" />
       <div class="artist-meta">
         <h1>{{ a.name }}</h1>
         <span class="song-count">{{ a.songCount }} {{ a.songCount === 1 ? 'song' : 'songs' }}</span>
@@ -39,7 +39,7 @@
               {{ i + 1 }}
             }
           </div>
-          <img class="song-cover" [src]="apiBase + song.coverUrl" [alt]="song.title" />
+          <img class="song-cover" [src]="song.coverUrl" [alt]="song.title" />
           <span class="song-title">{{ song.title }}</span>
           <span class="song-artist">{{ song.artistName }}</span>
           <button class="like-btn" [class.liked]="song.isLiked" (click)="toggleLike(song, $event)" [title]="song.isLiked ? 'Unlike' : 'Like'">

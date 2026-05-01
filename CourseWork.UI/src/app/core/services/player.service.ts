@@ -141,7 +141,7 @@ export class PlayerService {
 
   private loadAndPlay(song: SongDto) {
     this._currentSong$.next(song);
-    this.audio.src = `${this.streamBase}/songs/${song.id}/stream`;
+    this.audio.src = song.fileUrl;
     this.audio.play();
   }
 
