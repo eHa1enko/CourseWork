@@ -60,7 +60,7 @@ namespace CourseWork.Application.Services
         {
             Id = artist.Id,
             Name = artist.Name,
-            ImageUrl = artist.ImagePath is not null ? $"/api/artists/{artist.Id}/image" : null,
+            ImageUrl = artist.ImagePath,
             SongCount = artist.Songs?.Count ?? 0
         };
     }

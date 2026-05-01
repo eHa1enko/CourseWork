@@ -77,7 +77,8 @@ namespace CourseWork.Application.Services
             Id = song.Id,
             Title = song.Title,
             Duration = song.Duration,
-            CoverUrl = song.CoverPath is not null ? $"/api/songs/{song.Id}/cover" : null,
+            FileUrl = song.FilePath,
+            CoverUrl = song.CoverPath,
             ArtistId = song.ArtistId,
             ArtistName = song.Artist?.Name ?? string.Empty
         };

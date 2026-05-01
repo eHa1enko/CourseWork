@@ -1,4 +1,5 @@
 using System.Text;
+using CourseWork.API.Services;
 using CourseWork.Application.Interfaces.Repositories;
 using CourseWork.Application.Interfaces.Services;
 using CourseWork.Application.Services;
@@ -26,6 +27,7 @@ builder.Services.AddScoped<ISongService, SongService>();
 builder.Services.AddScoped<IArtistService, ArtistService>();
 builder.Services.AddScoped<ILikedSongService, LikedSongService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddSingleton<ICloudinaryService, CloudinaryService>();
 
 // JWT Settings
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

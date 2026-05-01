@@ -8,7 +8,7 @@
       @for (artist of artists(); track artist.id) {
         <div class="artist-card" (click)="openArtist(artist.id)">
           <div class="artist-photo">
-            <img [src]="apiBase + artist.imageUrl" [alt]="artist.name" />
+            <img [src]="artist.imageUrl" [alt]="artist.name" />
           </div>
           <div class="artist-info">
             <span class="artist-name">{{ artist.name }}</span>

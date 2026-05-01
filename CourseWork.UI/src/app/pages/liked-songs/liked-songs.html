@@ -22,7 +22,7 @@
               {{ i + 1 }}
             }
           </div>
-          <img class="song-cover" [src]="apiBase + song.coverUrl" [alt]="song.title" />
+          <img class="song-cover" [src]="song.coverUrl" [alt]="song.title" />
           <span class="song-title">{{ song.title }}</span>
           <span class="song-artist">{{ song.artistName }}</span>
           <button class="like-btn liked" (click)="unlike(song, $event)" title="Unlike">

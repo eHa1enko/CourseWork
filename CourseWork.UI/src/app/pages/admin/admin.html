@@ -32,7 +32,7 @@
       @for (artist of artists(); track artist.id) {
         <div class="admin-item">
           @if (artist.imageUrl) {
-            <img class="item-thumb" [src]="apiBase + artist.imageUrl" [alt]="artist.name" />
+            <img class="item-thumb" [src]="artist.imageUrl" [alt]="artist.name" />
           } @else {
             <div class="item-thumb-empty"></div>
           }
@@ -108,7 +108,7 @@
       @for (song of songs(); track song.id) {
         <div class="admin-item">
           @if (song.coverUrl) {
-            <img class="item-thumb" [src]="apiBase + song.coverUrl" [alt]="song.title" />
+            <img class="item-thumb" [src]="song.coverUrl" [alt]="song.title" />
           } @else {
             <div class="item-thumb-empty"></div>
           }

@@ -1,7 +1,7 @@
+using CourseWork.API.Services;
 using CourseWork.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TagLib;
 
 namespace CourseWork.API.Controllers
 {
@@ -12,13 +12,13 @@ namespace CourseWork.API.Controllers
     {
         private readonly IArtistService _artistService;
         private readonly ISongService _songService;
-        private readonly IWebHostEnvironment _env;
+        private readonly ICloudinaryService _cloudinary;
 
-        public AdminController(IArtistService artistService, ISongService songService, IWebHostEnvironment env)
+        public AdminController(IArtistService artistService, ISongService songService, ICloudinaryService cloudinary)
         {
             _artistService = artistService;
             _songService = songService;
-            _env = env;
+            _cloudinary = cloudinary;
         }
 
         // ── ARTISTS ──────────────────────────────────────────────
@@ -29,13 +29,14 @@ namespace CourseWork.API.Controllers
             if (!IsAdmin()) return Forbid();
             if (string.IsNullOrWhiteSpace(name)) return BadRequest("Name is required.");
 
-            string? imagePath = null;
+            string? imageUrl = null;
             if (image is not null)
             {
-                imagePath = await SaveFile(image, "media/artists");
+                await using var stream = image.OpenReadStream();
+                imageUrl = await _cloudinary.UploadImageAsync(stream, image.FileName, "artists");
             }
 
-            var artist = await _artistService.CreateAsync(name, imagePath);
+            var artist = await _artistService.CreateAsync(name, imageUrl);
             return Ok(artist);
         }
 
@@ -47,10 +48,9 @@ namespace CourseWork.API.Controllers
             var artist = await _artistService.GetByIdAsync(id);
             if (artist is null) return NotFound();
 
-            // delete artist image file
-            var imagePath = await _artistService.GetImagePathAsync(id);
-            if (imagePath is not null)
-                DeleteFile(imagePath);
+            var imageUrl = await _artistService.GetImagePathAsync(id);
+            if (imageUrl is not null)
+                await _cloudinary.DeleteImageAsync(imageUrl);
 
             var deleted = await _artistService.DeleteAsync(id);
             return deleted ? NoContent() : NotFound();
@@ -69,15 +69,23 @@ namespace CourseWork.API.Controllers
             if (string.IsNullOrWhiteSpace(title)) return BadRequest("Title is required.");
             if (audio is null) return BadRequest("Audio file is required.");
 
-            var audioPath = await SaveFile(audio, "media/songs");
-            var audioFullPath = Path.Combine(_env.WebRootPath, audioPath);
-            var duration = GetDuration(audioFullPath);
+            using var audioMs = new MemoryStream();
+            await audio.CopyToAsync(audioMs);
+            audioMs.Position = 0;
 
-            string? coverPath = null;
+            var duration = GetDurationFromStream(audioMs, audio.FileName);
+            audioMs.Position = 0;
+
+            var audioUrl = await _cloudinary.UploadAudioAsync(audioMs, audio.FileName);
+
+            string? coverUrl = null;
             if (cover is not null)
-                coverPath = await SaveFile(cover, "media/covers");
+            {
+                await using var coverStream = cover.OpenReadStream();
+                coverUrl = await _cloudinary.UploadImageAsync(coverStream, cover.FileName);
+            }
 
-            var song = await _songService.CreateAsync(title, artistId, audioPath, coverPath, duration);
+            var song = await _songService.CreateAsync(title, artistId, audioUrl, coverUrl, duration);
             return Ok(song);
         }
 
@@ -86,14 +94,14 @@ namespace CourseWork.API.Controllers
         {
             if (!IsAdmin()) return Forbid();
 
-            var filePath = await _songService.GetFilePathAsync(id);
-            var coverPath = await _songService.GetCoverPathAsync(id);
+            var fileUrl = await _songService.GetFilePathAsync(id);
+            var coverUrl = await _songService.GetCoverPathAsync(id);
 
             var deleted = await _songService.DeleteAsync(id);
             if (!deleted) return NotFound();
 
-            if (filePath is not null) DeleteFile(filePath);
-            if (coverPath is not null) DeleteFile(coverPath);
+            if (fileUrl is not null) await _cloudinary.DeleteAudioAsync(fileUrl);
+            if (coverUrl is not null) await _cloudinary.DeleteImageAsync(coverUrl);
 
             return NoContent();
         }
@@ -106,32 +114,23 @@ namespace CourseWork.API.Controllers
             return claim?.Value == "true";
         }
 
-        private async Task<string> SaveFile(IFormFile file, string folder)
+        private static int GetDurationFromStream(Stream stream, string fileName)
         {
-            var ext = Path.GetExtension(file.FileName);
-            var fileName = $"{Guid.NewGuid()}{ext}";
-            var relativePath = $"{folder}/{fileName}";
-            var fullPath = Path.Combine(_env.WebRootPath, relativePath);
+            var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}{Path.GetExtension(fileName)}");
+            try
+            {
+                using (var fs = System.IO.File.Create(tempPath))
+                    stream.CopyTo(fs);
 
-            Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
-            await using var stream = new FileStream(fullPath, FileMode.Create);
-            await file.CopyToAsync(stream);
-
-            return relativePath;
-        }
-
-        private void DeleteFile(string relativePath)
-        {
-            var fullPath = Path.Combine(_env.WebRootPath, relativePath);
-            if (System.IO.File.Exists(fullPath))
-                System.IO.File.Delete(fullPath);
-        }
-
-        private static int GetDuration(string fullPath)
-        {
-            if (!System.IO.File.Exists(fullPath)) return 0;
-            using var file = TagLib.File.Create(fullPath);
-            return (int)file.Properties.Duration.TotalSeconds;
+                using var tagFile = TagLib.File.Create(tempPath);
+                return (int)tagFile.Properties.Duration.TotalSeconds;
+            }
+            catch { return 0; }
+            finally
+            {
+                if (System.IO.File.Exists(tempPath))
+                    System.IO.File.Delete(tempPath);
+            }
         }
     }
 }

@@ -2,7 +2,6 @@ using System.Security.Claims;
 using CourseWork.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.StaticFiles;
 
 namespace CourseWork.API.Controllers
 {
@@ -14,14 +13,12 @@ namespace CourseWork.API.Controllers
         private readonly IArtistService _artistService;
         private readonly ISongService _songService;
         private readonly ILikedSongService _likedSongService;
-        private readonly IWebHostEnvironment _env;
 
-        public ArtistsController(IArtistService artistService, ISongService songService, ILikedSongService likedSongService, IWebHostEnvironment env)
+        public ArtistsController(IArtistService artistService, ISongService songService, ILikedSongService likedSongService)
         {
             _artistService = artistService;
             _songService = songService;
             _likedSongService = likedSongService;
-            _env = env;
         }
 
         [HttpGet]
@@ -53,21 +50,6 @@ namespace CourseWork.API.Controllers
                 song.IsLiked = likedIds.Contains(song.Id);
 
             return Ok(songs);
-        }
-
-        [HttpGet("{id}/image")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Image(int id)
-        {
-            var imagePath = await _artistService.GetImagePathAsync(id);
-            if (imagePath is null) return NotFound();
-
-            var relativePath = $"media/artists/{Path.GetFileName(imagePath)}";
-            var fullPath = Path.Combine(_env.WebRootPath, relativePath);
-            if (!System.IO.File.Exists(fullPath)) return NotFound();
-
-            new FileExtensionContentTypeProvider().TryGetContentType(fullPath, out var contentType);
-            return PhysicalFile(fullPath, contentType ?? "image/jpeg");
         }
     }
 }
