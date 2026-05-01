@@ -49,10 +49,10 @@ namespace CourseWork.Application.Services
         public async Task<AuthResultDto> LoginAsync(LoginDto dto)
         {
             var user = await _userRepository.GetByEmailAsync(dto.Email)
-                ?? throw new InvalidOperationException("Невірний email або пароль.");
+                ?? throw new InvalidOperationException("Invalid email or password.");
 
             if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
-                throw new InvalidOperationException("Невірний email або пароль.");
+                throw new InvalidOperationException("Invalid email or password.");
 
             return new AuthResultDto
             {

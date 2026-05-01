@@ -76,14 +76,14 @@ export class Admin implements OnInit {
         this.artistLoading = false;
       },
       error: () => {
-        this.artistError = 'Помилка при створенні артиста.';
+        this.artistError = 'Failed to create artist.';
         this.artistLoading = false;
       }
     });
   }
 
   deleteArtist(artist: ArtistDto) {
-    if (!confirm(`Видалити артиста "${artist.name}" і всі його треки?`)) return;
+    if (!confirm(`Delete artist "${artist.name}" and all their tracks?`)) return;
 
     this.adminService.deleteArtist(artist.id).subscribe({
       next: () => {
@@ -113,14 +113,14 @@ export class Admin implements OnInit {
         this.songLoading = false;
       },
       error: () => {
-        this.songError = 'Помилка при додаванні треку.';
+        this.songError = 'Failed to add track.';
         this.songLoading = false;
       }
     });
   }
 
   deleteSong(song: SongDto) {
-    if (!confirm(`Видалити трек "${song.title}"?`)) return;
+    if (!confirm(`Delete track "${song.title}"?`)) return;
 
     this.adminService.deleteSong(song.id).subscribe({
       next: () => this.songs.update(list => list.filter(s => s.id !== song.id))
