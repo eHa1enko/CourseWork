@@ -6,5 +6,8 @@ namespace CourseWork.Application.Interfaces.Repositories
     {
         Task<IEnumerable<Artist>> GetAllAsync();
         Task<Artist?> GetByIdAsync(int id);
+        Task<IEnumerable<Artist>> SearchAsync(string query);
+        Task<Artist> AddAsync(Artist artist);
+        Task DeleteAsync(Artist artist);
     }
 }

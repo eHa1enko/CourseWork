@@ -29,6 +29,7 @@ namespace CourseWork.Application.Services
             });
         }
 
+        // якщо вже лайкнуто — ігноруємо, щоб не було дублів
         public async Task LikeAsync(int userId, int songId)
         {
             var existing = await _likedSongRepository.GetAsync(userId, songId);

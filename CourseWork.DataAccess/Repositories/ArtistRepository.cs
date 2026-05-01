@@ -23,5 +23,26 @@ namespace CourseWork.DataAccess.Repositories
         {
             return await _context.Artists.Include(a => a.Songs).FirstOrDefaultAsync(a => a.Id == id);
         }
+
+        public async Task<IEnumerable<Artist>> SearchAsync(string query)
+        {
+            return await _context.Artists
+                .Include(a => a.Songs)
+                .Where(a => a.Name.ToLower().Contains(query.ToLower()))
+                .ToListAsync();
+        }
+
+        public async Task<Artist> AddAsync(Artist artist)
+        {
+            _context.Artists.Add(artist);
+            await _context.SaveChangesAsync();
+            return artist;
+        }
+
+        public async Task DeleteAsync(Artist artist)
+        {
+            _context.Artists.Remove(artist);
+            await _context.SaveChangesAsync();
+        }
     }
 }

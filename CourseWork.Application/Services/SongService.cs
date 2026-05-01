@@ -31,6 +31,12 @@ namespace CourseWork.Application.Services
             return songs.Select(ToDto);
         }
 
+        public async Task<IEnumerable<SongDto>> SearchAsync(string query)
+        {
+            var songs = await _songRepository.SearchAsync(query);
+            return songs.Select(ToDto);
+        }
+
         public async Task<string?> GetFilePathAsync(int id)
         {
             var song = await _songRepository.GetByIdAsync(id);
@@ -43,12 +49,37 @@ namespace CourseWork.Application.Services
             return song?.CoverPath;
         }
 
+        // після збереження робимо повторний запит щоб отримати пісню разом з артистом
+        public async Task<SongDto> CreateAsync(string title, int artistId, string filePath, string? coverPath, int duration)
+        {
+            var song = new CourseWork.Entities.Entities.Song
+            {
+                Title = title,
+                ArtistId = artistId,
+                FilePath = filePath,
+                CoverPath = coverPath,
+                Duration = duration
+            };
+            var created = await _songRepository.AddAsync(song);
+            var full = await _songRepository.GetByIdAsync(created.Id);
+            return ToDto(full!);
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var song = await _songRepository.GetByIdAsync(id);
+            if (song is null) return false;
+            await _songRepository.DeleteAsync(song);
+            return true;
+        }
+
         private static SongDto ToDto(CourseWork.Entities.Entities.Song song) => new()
         {
             Id = song.Id,
             Title = song.Title,
             Duration = song.Duration,
-            CoverUrl = song.CoverPath is not null ? $"/api/songs/{song.Id}/cover" : null,
+            FileUrl = song.FilePath,
+            CoverUrl = song.CoverPath,
             ArtistId = song.ArtistId,
             ArtistName = song.Artist?.Name ?? string.Empty
         };

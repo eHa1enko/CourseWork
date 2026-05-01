@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Layout } from './layout/layout';
 import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -32,6 +33,23 @@ export const routes: Routes = [
       {
         path: 'liked-songs',
         loadComponent: () => import('./pages/liked-songs/liked-songs').then(m => m.LikedSongs)
+      },
+      {
+        path: 'search',
+        loadComponent: () => import('./pages/search/search').then(m => m.Search)
+      },
+      {
+        path: 'admin',
+        loadComponent: () => import('./pages/admin/admin').then(m => m.Admin),
+        canActivate: [adminGuard]
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./pages/profile/profile').then(m => m.Profile)
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./pages/settings/settings').then(m => m.Settings)
       }
     ]
   }

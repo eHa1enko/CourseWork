@@ -18,7 +18,8 @@ namespace CourseWork.API.Controllers
         }
 
         private int GetUserId() =>
-            int.Parse(User.FindFirstValue("sub")!);
+            int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? User.FindFirstValue("sub")!);
 
         [HttpGet]
         public async Task<IActionResult> GetAll()

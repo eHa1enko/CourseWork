@@ -7,5 +7,8 @@ namespace CourseWork.Application.Interfaces.Repositories
         Task<IEnumerable<Song>> GetAllAsync();
         Task<Song?> GetByIdAsync(int id);
         Task<IEnumerable<Song>> GetByArtistIdAsync(int artistId);
+        Task<IEnumerable<Song>> SearchAsync(string query);
+        Task<Song> AddAsync(Song song);
+        Task DeleteAsync(Song song);
     }
 }
