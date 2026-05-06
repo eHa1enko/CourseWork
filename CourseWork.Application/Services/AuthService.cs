@@ -27,7 +27,7 @@ namespace CourseWork.Application.Services
         {
             var existing = await _userRepository.GetByEmailAsync(dto.Email);
             if (existing is not null)
-                throw new InvalidOperationException("Користувач з таким email вже існує.");
+                throw new InvalidOperationException("User with this email already exists.");
 
             var user = new User
             {

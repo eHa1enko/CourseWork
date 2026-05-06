@@ -15,8 +15,10 @@ export class Login {
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
 
+  private readonly emailPattern = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+
   form = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
     password: ['', Validators.required]
   });
 
@@ -24,7 +26,10 @@ export class Login {
   loading = false;
 
   submit() {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     this.loading = true;
     this.error = '';
 

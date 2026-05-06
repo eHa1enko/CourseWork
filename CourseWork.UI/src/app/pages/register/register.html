@@ -5,36 +5,41 @@
     <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
       <div class="field">
         <label for="username">Username</label>
-        <input id="username" type="text" formControlName="username" placeholder="john_doe" />
+        <input id="username" type="text" formControlName="username" placeholder="john_doe"
+          [class.input-error]="form.get('username')?.invalid && form.get('username')?.touched" />
         @if (form.get('username')?.invalid && form.get('username')?.touched) {
           @if (form.get('username')?.errors?.['required']) {
             <p class="error">Username is required</p>
           } @else if (form.get('username')?.errors?.['minlength']) {
             <p class="error">Minimum 3 characters</p>
+          } @else if (form.get('username')?.errors?.['pattern']) {
+            <p class="error">Only letters, digits, dots, underscores, and hyphens allowed</p>
           }
         }
       </div>
 
       <div class="field">
         <label for="email">Email</label>
-        <input id="email" type="email" formControlName="email" placeholder="you@example.com" />
+        <input id="email" type="text" formControlName="email" placeholder="you@example.com"
+          [class.input-error]="form.get('email')?.invalid && form.get('email')?.touched" />
         @if (form.get('email')?.invalid && form.get('email')?.touched) {
           @if (form.get('email')?.errors?.['required']) {
             <p class="error">Email is required</p>
-          } @else if (form.get('email')?.errors?.['email']) {
-            <p class="error">Invalid email format</p>
+          } @else if (form.get('email')?.errors?.['pattern']) {
+            <p class="error">Enter a valid email address (e.g. you@example.com)</p>
           }
         }
       </div>
 
       <div class="field">
         <label for="password">Password</label>
-        <input id="password" type="password" formControlName="password" placeholder="min. 6 characters" />
+        <input id="password" type="password" formControlName="password" placeholder="min. 8 characters"
+          [class.input-error]="form.get('password')?.invalid && form.get('password')?.touched" />
         @if (form.get('password')?.invalid && form.get('password')?.touched) {
           @if (form.get('password')?.errors?.['required']) {
             <p class="error">Password is required</p>
           } @else if (form.get('password')?.errors?.['minlength']) {
-            <p class="error">Minimum 6 characters</p>
+            <p class="error">Minimum 8 characters</p>
           }
         }
       </div>
