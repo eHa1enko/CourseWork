@@ -1,0 +1,51 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "YourStrong@Passw0rd"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrong@Passw0rd' -Q 'SELECT 1' -C"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  api:
+    build:
+      context: .
+      dockerfile: CourseWork.API/Dockerfile
+    ports:
+      - "5094:8080"
+    environment:
+      ASPNETCORE_URLS: "http://+:8080"
+      ConnectionStrings__DefaultConnection: "Server=db,1433;Database=MusicPlatform;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;"
+      JwtSettings__SecretKey: "coursework-super-secret-key-32chars!!"
+      JwtSettings__Issuer: "CourseWork.API"
+      JwtSettings__Audience: "CourseWork.UI"
+      JwtSettings__ExpiresInDays: "7"
+      Cloudinary__CloudName: "your_cloudinary_cloud_name"
+      Cloudinary__ApiKey: "your_cloudinary_api_key"
+      Cloudinary__ApiSecret: "your_cloudinary_api_secret"
+      AdminSettings__Email: "admin@example.com"
+      AdminSettings__Password: "Admin@1234!"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./CourseWork.UI
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    depends_on:
+      - api
+
+volumes:
+  mssql_data:
