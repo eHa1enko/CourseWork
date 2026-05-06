@@ -398,5 +398,11 @@ FodyWeavers.xsd
 *.msp
 
 # JetBrains Rider
+.idea/
 *.sln.iml
+
+# GitHub Copilot
+.copilot/
+.github/copilot-instructions.md
+*.copilot
 CourseWork.API/wwwroot

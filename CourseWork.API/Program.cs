@@ -6,6 +6,7 @@ using CourseWork.Application.Services;
 using CourseWork.Application.Settings;
 using CourseWork.DataAccess.Data;
 using CourseWork.DataAccess.Repositories;
+using CourseWork.Entities.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -61,6 +62,31 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await db.Database.MigrateAsync();
+
+    var adminEmail = app.Configuration["AdminSettings:Email"];
+    var adminPassword = app.Configuration["AdminSettings:Password"];
+
+    if (!string.IsNullOrEmpty(adminEmail) && !string.IsNullOrEmpty(adminPassword))
+    {
+        var adminExists = await db.Users.AnyAsync(u => u.IsAdmin);
+        if (!adminExists)
+        {
+            db.Users.Add(new User
+            {
+                Username = "Admin",
+                Email = adminEmail,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(adminPassword),
+                IsAdmin = true
+            });
+            await db.SaveChangesAsync();
+        }
+    }
+}
 
 if (app.Environment.IsDevelopment())
 {
