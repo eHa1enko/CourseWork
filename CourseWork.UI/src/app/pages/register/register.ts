@@ -15,10 +15,13 @@ export class Register {
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
 
+  private readonly emailPattern = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+  private readonly usernamePattern = /^[a-zA-Z0-9._-]+$/;
+
   form = this.fb.group({
-    username: ['', [Validators.required, Validators.minLength(3)]],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(this.usernamePattern)]],
+    email: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
+    password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]]
   });
 
   error = '';
