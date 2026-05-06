@@ -1,58 +1,77 @@
-# CourseWork
-MusicPlatform
+# Music Platform
+## Вимоги
 
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
-Інструкції по запуску проєкту. 
+Більше нічого встановлювати не потрібно — .NET SDK і Node.js запускаються всередині контейнерів.
 
-Також додана папка templates в якій вже є декілька пісень без авторських прав, лого артистів та обложки для пісень, можете використовувати їх для тестування або можете завантажувати свої.
+## Швидкий старт
 
-1. Встановлення ПЗ.
-    - встановити .net 10 з оффіційного сайту microsoft, "dotnet --version" в терміналі для перевірки. 
-    - встановити node.js + angular cli, "node -v" та "ng v" в терміналі для перевірки.  
-    - встановити sql server express  
+### 1. Налаштуйте Cloudinary
 
-    1.1. Посилання для встановлення ПЗ.
-      - .net10 "https://dotnet.microsoft.com/en-us/download/dotnet/10.0".
-      - node.js "https://nodejs.org/en/download"
-      - angular cli "npm install -g @angular/cli" в терміналі. (після встановлення node.js)
-      - sql server "https://www.microsoft.com/en-us/sql-server/sql-server-downloads"
+Відкрийте `docker-compose.yml` і замініть значення в секції `api → environment`:
 
-3. Налаштування бд. 
-    - створити БД, замінити ConnectionString в appsettings.Development.json на свій ConnectionString 
+```yaml
+Cloudinary__CloudName: "ваш_cloud_name"
+Cloudinary__ApiKey: "ваш_api_key"
+Cloudinary__ApiSecret: "ваш_api_secret"
+```
 
-4. Запуск бекенду
-    - проєкт треба запускати з CourseWork.API "cd CourseWork.API"
-    - dotnet ef database update, перед першим запуском, це також треба робити з CourseWork.API 
-    - dotnet run для запуску, також з CourseWork.API.
+Отримати ключі можна безкоштовно на [cloudinary.com](https://cloudinary.com).
 
-5. Запуск фронтенду
-    - проєкт треба запускати з CourseWork.UI "cd CourseWork.UI"
-    - "npm install" перед першим запускож, це також треба робити з CourseWork.UI
-    - "ng serve" для запуску проєкту, також CourseWork.UI
+### 2. Запустіть весь проєкт
 
-6. Авторизація. 
-    В проєкті є адмін панель для додавання артистів та пісень, для того щоб вона з'явилась треба внести зміни в БД
+```bash
+docker compose up
+```
 
-    Приклад в SSMS 22
-    - зареєструватись в системі. 
-    - знайдіть таблицю з юзерами 
-    - ![шлях](image.png)
-    - поле isAdmin(по стандарту 0) замініть на 1
-    -  ![приклад](image-1.png) 
+Це автоматично:
+- підніме SQL Server з named volume (дані зберігаються між перезапусками)
+- дочекається готовності БД через healthcheck
+- виконає EF Core міграції при старті API
+- створить адміна, якщо його ще немає
+- запустить Angular dev-сервер
 
- -------------------------------
-Для запуску на macOs/linux
+### 3. Відкрийте застосунок
 
-Всі кроки ті самі, окрім SQL Server — на macOS/Linux він встановлюється через Docker.
+| Сервіс   | URL                   |
+|----------|-----------------------|
+| Frontend | http://localhost:4200 |
+| API      | http://localhost:5094 |
 
-1. Встановити Docker Desktop "https://www.docker.com/products/docker-desktop"
+## Облікові дані адміна
 
-2. Запустити SQL Server контейнер (замінити YOUR_PASSWORD та YOUR_DB_NAME на свій пароль та назву дб" в проєкті використовується назва MusicPlatform" ):
-    
-    docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=YOUR_PASSWORD" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+За замовчуванням (налаштовуються через `AdminSettings` у `docker-compose.yml`):
 
-3. Замінити ConnectionString в appsettings.Development.json на:
-    "Server=localhost,1433;Database=YOUR_DB_NAME;User Id=SA;Password=YOUR_PASSWORD;TrustServerCertificate=True;"
+- **Email:** `admin@example.com`
+- **Password:** `Admin@1234!`
 
-4. Далі — кроки 3 і 4 з основної інструкції (dotnet ef database update, dotnet run, ng serve).
- 
+## Зупинка
+
+```bash
+# зупинити контейнери (дані БД зберігаються)
+docker compose down
+
+# зупинити і видалити дані БД
+docker compose down -v
+```
+
+## Локальна розробка без Docker
+
+Потрібні: .NET 10 SDK, Node.js, SQL Server.
+
+1. Скопіюйте конфіг:
+   ```bash
+   cp CourseWork.API/appsettings.example.json CourseWork.API/appsettings.Development.json
+   ```
+2. Вкажіть ваш ConnectionString і Cloudinary-ключі в `appsettings.Development.json`
+
+3. Запустіть API (міграції і адмін створяться автоматично):
+   ```bash
+   cd CourseWork.API && dotnet run
+   ```
+
+4. Запустіть фронтенд:
+   ```bash
+   cd CourseWork.UI && npm install && ng serve
+   ```
