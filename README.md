@@ -60,18 +60,14 @@ docker compose down -v
 
 Потрібні: .NET 10 SDK, Node.js, SQL Server.
 
-1. Скопіюйте конфіг:
-   ```bash
-   cp CourseWork.API/appsettings.example.json CourseWork.API/appsettings.Development.json
-   ```
-2. Вкажіть ваш ConnectionString і Cloudinary-ключі в `appsettings.Development.json`
+1. Вкажіть ваш ConnectionString і Cloudinary-ключі в `CourseWork.API/appsettings.Development.json`
 
-3. Запустіть API (міграції і адмін створяться автоматично):
+2. Запустіть API (міграції і адмін створяться автоматично):
    ```bash
    cd CourseWork.API && dotnet run
    ```
 
-4. Запустіть фронтенд:
+3. Запустіть фронтенд:
    ```bash
    cd CourseWork.UI && npm install && ng serve
    ```
