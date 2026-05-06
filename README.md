@@ -17,7 +17,7 @@ Cloudinary__ApiKey: "ваш_api_key"
 Cloudinary__ApiSecret: "ваш_api_secret"
 ```
 
-Отримати ключі можна безкоштовно на [cloudinary.com](https://cloudinary.com).
+Ключі додані в приватному коментарі гугл класу.
 
 ### 2. Запустіть весь проєкт
 
